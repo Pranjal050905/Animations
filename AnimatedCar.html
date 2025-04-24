@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Moving Car Animation</title> 
+  <style>
+    /* Basic Page Setup */
+    body {
+      margin: 0;
+      overflow: hidden; /* Prevents scrollbars */
+      background: #87ceeb; /* Sky blue background */
+    }
+
+    /* Sun Styling */
+    .sun {
+      position: absolute;
+      top: 50px;
+      right: 80px;
+      width: 80px;
+      height: 80px;
+      background: yellow;
+      border-radius: 50%; /* Makes it round */
+      box-shadow: 0 0 30px 10px rgba(255, 255, 0, 0.5); /* Glowing effect */
+    }
+
+    /* Base Cloud Shape */
+    .cloud {
+      position: absolute;
+      background: white;
+      border-radius: 50%; /* Round shape for fluffy clouds */
+    }
+
+    /* Positioning the first cloud */
+    .cloud1 {
+      top: 80px;
+      left: 100px;
+      width: 80px;
+      height: 50px;
+    }
+
+    /* Additional cloud bubbles using ::before and ::after */
+    .cloud1::before,
+    .cloud1::after {
+      content: '';
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+    }
+
+    .cloud1::before {
+      width: 60px;
+      height: 60px;
+      left: -30px;
+      top: -10px;
+    }
+
+    .cloud1::after {
+      width: 60px;
+      height: 60px;
+      left: 30px;
+      top: -10px;
+    }
+
+    /* Tree Trunk */
+    .tree {
+      position: absolute;
+      bottom: 150px;
+      width: 20px;
+      height: 60px;
+      background: #8B4513; /* Brown trunk */
+    }
+
+    /* Tree Top (Green Circle) */
+    .tree::after {
+      content: '';
+      position: absolute;
+      bottom: 40px;
+      left: -20px;
+      width: 60px;
+      height: 60px;
+      background: green;
+      border-radius: 50%;
+    }
+
+    /* Positioning trees */
+    .tree1 { left: 100px; }
+    .tree2 { left: 300px; }
+    .tree3 { left: 600px; }
+
+    /* Road Styling */
+    .road {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 150px;
+      background: #444; /* Dark grey road */
+    }
+
+    /* Center yellow dashed line on the road */
+    .line {
+      position: absolute;
+      bottom: 70px;
+      width: 100%;
+      height: 10px;
+      background: repeating-linear-gradient(
+        to right,
+        yellow 0px,
+        yellow 30px,
+        transparent 30px,
+        transparent 60px
+      );
+    }
+
+    /* Car Animation Container */
+    .car {
+      position: absolute;
+      bottom: 60px;
+      left: -200px; /* Initially places the car off-screen */
+      animation: moveCar 6s linear infinite; /* Moves car from left to right */
+    }
+
+    /* Car Body */
+    .car-body {
+      width: 160px;
+      height: 40px;
+      background: red;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    /* Car Roof */
+    .car-roof {
+      width: 80px;
+      height: 30px;
+      background: #cc0000;
+      position: absolute;
+      top: -25px;
+      left: 40px;
+      border-radius: 5px 5px 0 0;
+    }
+
+    /* Wheel Base Styling (You can replace this with background-image for detailed wheel look) */
+    .wheel {
+      position: absolute;
+      bottom: -10px;
+      width: 30px;
+      height: 30px;
+      background: black;
+      border-radius: 50%; /* Makes wheels circular */
+      animation: rotateWheel 1s linear infinite; /* Rotates wheel */
+    }
+
+    /* Positioning the wheels */
+    .wheel.left { left: 20px; }
+    .wheel.right { right: 20px; }
+
+    /* Car Movement Keyframe */
+    @keyframes moveCar {
+      0% { left: -200px; } /* Starts the car off-screen to the left */
+      100% { left: 100%; } /* Moves the car to the right side of the screen */
+    }
+
+    /* Wheel Rotation Keyframe */
+    @keyframes rotateWheel {
+      0% { transform: rotate(0deg); } /* Initial rotation angle */
+      100% { transform: rotate(360deg); } /* Full rotation of the wheel */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sun -->
+  <div class="sun"></div>
+
+  <!-- Cloud -->
+  <div class="cloud cloud1"></div>
+
+  <!-- Trees in Background -->
+  <div class="tree tree1"></div>
+  <div class="tree tree2"></div>
+  <div class="tree tree3"></div>
+
+  <!-- Road with Yellow Dashes -->
+  <div class="road">
+    <div class="line"></div>
+  </div>
+
+  <!-- Animated Car -->
+  <div class="car">
+    <div class="car-body">
+      <div class="car-roof"></div>
+      <div class="wheel left"></div>
+      <div class="wheel right"></div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bouncing Square</title>
+  <style>
+    /* Style the canvas */
+    canvas {
+      background: lightgrey; /* Set canvas background color */
+      display: block;        /* Make canvas a block-level element */
+      margin: 50px auto;     /* Center the canvas horizontally with margin */
+      border: 4px solid black; /* Add a thick black border */
+    }
+  </style>
+</head>
+<body>
+
+<!-- Canvas element where the animation happens -->
+<canvas id="gameCanvas" width="500" height="400"></canvas>
+
+<script>
+  // Get reference to the canvas and its 2D drawing context
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  // Define the square's properties
+  const square = {
+    x: 100,         // Starting X position
+    y: 100,         // Starting Y position
+    size: 50,       // Width and height of the square
+    dx: 3,          // Horizontal velocity (speed in X direction)
+    dy: 2,          // Vertical velocity (speed in Y direction)
+    color: "#00ffcc" // Color of the square
+  };
+
+  // Draw the square on the canvas
+  function drawSquare() {
+    ctx.fillStyle = square.color; // Set fill color
+    ctx.fillRect(square.x, square.y, square.size, square.size); // Draw square
+  }
+
+  // Update square position and redraw
+  function update() {
+    // Clear the entire canvas before redrawing
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Move the square by adding velocity to position
+    square.x += square.dx;
+    square.y += square.dy;
+
+    // Bounce the square off left and right edges
+    if (square.x + square.size > canvas.width || square.x < 0) {
+      square.dx *= -1; // Reverse horizontal direction
+    }
+
+    // Bounce the square off top and bottom edges
+    if (square.y + square.size > canvas.height || square.y < 0) {
+      square.dy *= -1; // Reverse vertical direction
+    }
+
+    // Draw the updated square
+    drawSquare();
+
+    // Call update again on the next animation frame
+    requestAnimationFrame(update);
+  }
+
+  // Start the animation loop
+  update();
+</script>
+
+</body>
+</html>

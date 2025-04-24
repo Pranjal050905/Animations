@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coffee Machine</title>
+
+  <style>
+    /* --- Basic Page Styling --- */
+    body {
+      background: linear-gradient(to top right, #dcdcdc, #f5f5f5);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    /* --- Coffee Machine Container --- */
+    .machine {
+      width: 240px;
+      height: 360px;
+      background: linear-gradient(#ccc, #999); /* Light grey look */
+      border-radius: 20px;
+      box-shadow: inset -4px -4px 8px rgba(255,255,255,0.1),
+                  inset 4px 4px 8px rgba(0,0,0,0.5),
+                  0 8px 20px rgba(0,0,0,0.4);
+      position: relative;
+      padding-top: 60px;
+    }
+
+    /* --- Digital Display Screen --- */
+    .display {
+      width: 120px;
+      height: 30px;
+      background: #222;
+      color: #fff; /* Soft Neon Blue text */
+      font-size: 14px;
+      text-align: center;
+      line-height: 30px;
+      border-radius: 6px;
+      position: absolute;
+      top: 15px;
+      left: 60px;
+      box-shadow: inset 0 0 10px #00d9ff; /* Neon blue glow */
+    }
+
+    /* --- Coffee Spout --- */
+    .spout {
+      width: 30px;
+      height: 40px;
+      background: linear-gradient(#bbb, #888);
+      position: absolute;
+      top: 60px;
+      left: 105px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px #fff4 inset;
+    }
+
+    /* --- Coffee Stream Animation --- */
+    .coffee-stream {
+      width: 12px;
+      height: 0;
+      background: #6f4e37;
+      position: absolute;
+      top: 100px;
+      left: 114px;
+      transition: height 2s ease;
+      z-index: 2;
+    }
+
+    /* --- Coffee Cup Container --- */
+    .cup {
+      width: 90px;
+      height: 100px;
+      border: 4px solid #555;
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      bottom: 30px;
+      left: 75px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    }
+
+    /* --- Coffee Filling Inside Cup --- */
+    .coffee-fill {
+      width: 100%;
+      height: 0%;
+      background: #6f4e37;
+      position: absolute;
+      bottom: 0;
+      transition: height 2s ease;
+    }
+
+    /* --- Steam Animation --- */
+    .steam {
+      position: absolute;
+      top: -20px;
+      left: 30%;
+      width: 10px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      animation: steamUp 1.5s infinite ease-in-out;
+      opacity: 0;
+    }
+
+    /* --- Additional steam trails --- */
+    .steam::after,
+    .steam::before {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      animation: steamUp 1.5s infinite ease-in-out;
+    }
+
+    .steam::after {
+      left: 10px;
+      animation-delay: 0.3s;
+    }
+
+    .steam::before {
+      left: -10px;
+      animation-delay: 0.6s;
+    }
+
+    /* --- Steam Animation Keyframes --- */
+    @keyframes steamUp {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.6;
+      }
+      100% {
+        transform: translateY(-40px) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* --- Tray beneath the cup --- */
+    .tray {
+      width: 80%;
+      height: 8px;
+      background: #aaa;
+      border-radius: 5px;
+      position: absolute;
+      bottom: 20px;
+      left: 10%;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* --- Button & Select Styling --- */
+    select, button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px #aaa;
+    }
+
+    button {
+      background: #6f4e37;
+      color: white;
+      box-shadow: 0 4px #543b2a;
+    }
+
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #543b2a;
+    }
+
+    select {
+      background: #eee;
+      color: #333;
+    }
+
+    /* --- Label shown below after brewing --- */
+    #coffeeTypeLabel {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Coffee Machine UI -->
+  <div class="machine">
+    <div class="display" id="displayText">Select Coffee</div>
+    <div class="spout"></div>
+    <div class="coffee-stream" id="coffeeStream"></div>
+    <div class="cup">
+      <div class="coffee-fill" id="coffeeFill"></div>
+      <div class="steam" id="steam"></div>
+    </div>
+    <div class="tray"></div>
+  </div>
+
+  <!-- Coffee Type Dropdown -->
+  <select id="coffeeType">
+    <option value="espresso">Espresso</option>
+    <option value="latte">Latte</option>
+    <option value="cappuccino">Cappuccino</option>
+    <option value="americano">Americano</option>
+  </select>
+
+  <!-- Brew Button -->
+  <button onclick="brewCoffee()">Brew Coffee</button>
+
+  <!-- Output Label -->
+  <div id="coffeeTypeLabel"></div>
+
+  <script>
+    // Function to simulate brewing
+    function brewCoffee() {
+      const coffeeStream = document.getElementById("coffeeStream");
+      const coffeeFill = document.getElementById("coffeeFill");
+      const steam = document.getElementById("steam");
+      const coffeeType = document.getElementById("coffeeType").value;
+      const label = document.getElementById("coffeeTypeLabel");
+      const display = document.getElementById("displayText");
+
+      // Set coffee color for each type
+      const coffeeColors = {
+        espresso: '#3e2c23',
+        latte: '#c8a47e',
+        cappuccino: '#b5835a',
+        americano: '#4a2c2a'
+      };
+
+      const coffeeNames = {
+        espresso: 'Espresso',
+        latte: 'Latte',
+        cappuccino: 'Cappuccino',
+        americano: 'Americano'
+      };
+
+      // Reset cup and UI state
+      coffeeFill.style.height = '0%';
+      steam.style.opacity = 0;
+      coffeeFill.style.background = coffeeColors[coffeeType];
+      coffeeStream.style.background = coffeeColors[coffeeType];
+      display.innerText = `Brewing ${coffeeNames[coffeeType]}...`;
+      label.innerText = '';
+
+      // Start brewing animation
+      coffeeStream.style.height = "60px";
+
+      // Start filling cup after delay
+      setTimeout(() => {
+        coffeeFill.style.height = "80%";
+      }, 1000);
+
+      // Finish brewing, show steam and message
+      setTimeout(() => {
+        coffeeStream.style.height = "0";
+        steam.style.opacity = 1;
+        display.innerText = `${coffeeNames[coffeeType]} Ready!`;
+        label.innerText = `☕ Enjoy your ${coffeeNames[coffeeType]}!`;
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
